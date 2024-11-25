@@ -1,0 +1,54 @@
+import os
+from datetime import datetime
+
+def extract_filenames(folder_path, output_path=None):
+    """
+    Extrait tous les noms de fichiers d'un dossier et les sauvegarde dans un fichier texte
+    
+    Args:
+        folder_path (str): Chemin du dossier à analyser
+        output_path (str): Chemin où sauvegarder le fichier de sortie (optionnel)
+    """
+    try:
+        # Vérifie si le chemin existe
+        if not os.path.exists(folder_path):
+            raise FileNotFoundError(f"Le dossier {folder_path} n'existe pas")
+            
+        # Liste tous les fichiers dans le dossier
+        files = os.listdir(folder_path)
+        
+        # Crée le nom du fichier de sortie avec la date
+        date_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Si output_path n'est pas spécifié, utilise le même dossier que celui analysé
+        if output_path is None:
+            output_path = folder_path
+            
+        output_file = os.path.join(output_path, f"Liste_images_{date_str}.txt")
+        
+        # Écrit les noms de fichiers dans le fichier texte
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(f"Liste des fichiers dans le dossier: {folder_path}\n")
+            f.write(f"Date de création: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n")
+            f.write("-" * 50 + "\n\n")
+            
+            # Trie les fichiers par ordre alphabétique
+            files.sort()
+            
+            # Écrit chaque nom de fichier
+            for i, filename in enumerate(files, 1):
+                f.write(f"{filename}\n")
+                
+        print(f"Liste créée avec succès dans le fichier:")
+        print(f"-> {output_file}")
+        print(f"Nombre total de fichiers: {len(files)}")
+        
+    except Exception as e:
+        print(f"Une erreur est survenue: {str(e)}")
+
+if __name__ == "__main__":
+    # Chemins pour le dossier à analyser et la sortie
+    folder_path = r"C:\Users\ASUS\Documents\Cours Ju Point fr\images"
+    output_path = r"C:\Users\ASUS\Documents\Cours Ju Point fr"  # Dossier où sera créé le fichier
+    
+    extract_filenames(folder_path, output_path)
